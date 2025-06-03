@@ -6,12 +6,12 @@ return {
     'nvim-tree/nvim-web-devicons', -- optional, for icons
     'MunifTanjim/nui.nvim',
   },
-  cmd = 'Neotree', -- lazy-load when `:Neotree` is called
+  cmd = 'Neotree', -- lazy-load when :Neotree is used
   keys = {
     {
-      '<leader>e',
+      '<leader>n',
       function()
-        vim.cmd 'Neotree toggle left'
+        vim.cmd 'Neotree toggle right'
       end,
       desc = 'Toggle NeoTree',
     },
@@ -19,6 +19,11 @@ return {
   config = function()
     require('neo-tree').setup {
       filesystem = {
+        filtered_items = {
+          visible = true,
+          hide_dotfiles = false,
+          hide_gitignored = false,
+        },
         window = {
           mappings = {
             ['\\'] = 'close_window',
