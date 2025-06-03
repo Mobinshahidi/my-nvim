@@ -3,10 +3,10 @@ return {
   version = '*',
   dependencies = {
     'nvim-lua/plenary.nvim',
-    'nvim-tree/nvim-web-devicons', -- optional, for icons
+    'nvim-tree/nvim-web-devicons',
     'MunifTanjim/nui.nvim',
   },
-  cmd = 'Neotree', -- lazy-load when :Neotree is used
+  cmd = 'Neotree',
   keys = {
     {
       '<leader>n',
