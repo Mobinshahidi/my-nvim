@@ -562,6 +562,25 @@ require('lazy').setup({ -- NOTE: Plugins can be added with a link (or for a gith
           --  Useful when you're not sure what type a variable is and you want to see
           --  the definition of its *type*, not where it was *defined*.
           map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
+          map('<leader>mm', function()
+            vim.lsp.buf.code_action {
+              context = { only = { 'source.addMissingImports' } },
+              apply = true,
+            }
+          end, 'Add Missing [I]mports')
+          map('<leader>mo', function()
+            vim.lsp.buf.code_action {
+              context = { only = { 'source.organizeImports' } },
+              apply = true,
+            }
+          end, 'Organize Imports')
+
+          map('<leader>mr', function()
+            vim.lsp.buf.code_action {
+              context = { only = { 'source.removeUnusedImports' } },
+              apply = true,
+            }
+          end, 'Remove Unused Imports')
 
           -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
           ---@param client vim.lsp.Client
@@ -678,17 +697,67 @@ require('lazy').setup({ -- NOTE: Plugins can be added with a link (or for a gith
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        clangd = {},
+        clangd = {
+          cmd = { 'clangd', '--header-insertion=iwyu' },
+        },
         -- gopls = {},
-        pyright = {},
-        rust_analyzer = {},
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                autoImportCompletions = true,
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+              },
+            },
+          },
+        },
+        rust_analyzer = {
+          settings = {
+            ['rust-analyzer'] = {
+              imports = {
+                granularity = {
+                  group = 'module',
+                },
+                prefix = 'self',
+              },
+              cargo = {
+                buildScripts = {
+                  enable = true,
+                },
+              },
+              procMacro = {
+                enable = true,
+              },
+            },
+          },
+        },
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        ts_ls = {},
+        ts_ls = {
+          settings = {
+            typescript = {
+              suggest = {
+                autoImports = true,
+                includeCompletionsForModuleExports = true,
+              },
+              preferences = {
+                importModuleSpecifier = 'relative',
+                includePackageJsonAutoImports = 'auto',
+              },
+            },
+            javascript = {
+              suggest = {
+                autoImports = true,
+                includeCompletionsForModuleExports = true,
+              },
+            },
+          },
+        },
         --
 
         lua_ls = {
@@ -792,6 +861,7 @@ require('lazy').setup({ -- NOTE: Plugins can be added with a link (or for a gith
           stop_after_first = true,
         },
         c = { 'clang-format' },
+        java = { 'google-java-format' },
       },
     },
   },
